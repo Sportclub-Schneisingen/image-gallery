@@ -1,0 +1,3 @@
+[submodule "themes/gallery"]
+	path = themes/gallery
+	url = git@github.com:Sportclub-Schneisingen/hugo-theme-gallery.git

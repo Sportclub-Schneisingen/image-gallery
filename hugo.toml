@@ -1,0 +1,19 @@
+baseURL = 'https://example.org/'
+languageCode = 'de-CH'
+defaultContentLanguage = 'de'
+title = 'Fotogalerie'
+
+timeZone = 'Europe/Zurich'
+theme = 'gallery'
+disableKinds = ['rss']
+copyright = "Copyright © FSV Schneisingen"
+
+[params]
+  [params.author]
+    name = 'FSV Schneisingen'
+    email = 'info@frauensportverein-schneisingen.ch'
+  [params.socialIcons]
+    website = 'https://frauensportverein-schneisingen.ch'
+    instagram = 'https://www.instagram.com/fsv_schneisingen/'
+  [params.remote]
+    enabled = true
