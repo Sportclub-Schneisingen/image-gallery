@@ -1,0 +1,36 @@
+name: Deploy to Azure Blob Storage
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4.2.2
+      with:
+        submodules: 'true'
+    - uses: Azure/login@v2.3.0
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Upload to blob storage
+      uses: Azure/cli@v2.1.0
+      with:
+        inlineScript: |
+          az storage blob upload-batch --account-name ${{ vars.STORAGE_ACCOUNT_NAME }} --auth-mode key -d '$web' -s .
+#    - name: Purge CDN endpoint
+#      uses: Azure/cli@v2.1.0
+#      with:
+#        inlineScript: |
+#          az cdn endpoint purge --content-paths  "/*" --profile-name "${{ vars.CDN_PROFILE_NAME }}" --name "${{ vars.CDN_ENDPOINT }}" --resource-group "${{ vars.RESOURCE_GROUP }}"
+    - name: Logout
+      run: |
+        az logout
+      if: always()
