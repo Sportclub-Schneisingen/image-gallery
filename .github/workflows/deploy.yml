@@ -8,6 +8,10 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.IMAGE_ACCOUNT_CONNECTION_STRING }}
+  AZURE_STORAGE_CONTAINER_NAME: ${{ secrets.IMAGE_CONTAINER_NAME }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
