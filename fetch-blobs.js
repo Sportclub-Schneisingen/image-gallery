@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { BlobServiceClient } from '@azure/storage-blob';
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
 
 const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
 const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME;
@@ -27,6 +27,7 @@ async function main() {
         });
     }
 
+    mkdirSync('data', { recursive: true });
     writeFileSync('data/images.json', JSON.stringify(images, null, 2));
 }
 
