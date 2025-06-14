@@ -13,7 +13,7 @@ const IMAGE_DIR = './images'; // Local image directory
 async function getMetadata(filePath) {
     const buffer = readFileSync(filePath);
     const image = sharp(buffer);
-    const metadata = await image.metadata();
+    const { autoOrient } = await image.metadata();
 
     // Dominant color
     const { dominant } = await image.stats();
@@ -26,12 +26,13 @@ async function getMetadata(filePath) {
         const parser = create(buffer);
         const result = parser.parse();
         title = result.tags.ImageDescription || '';
-        date = result.tags.DateTimeOriginal || '';
+        const timestamp = result.tags.DateTimeOriginal || '';
+        date = timestamp ? new Date(timestamp * 1000).toISOString() : '';
     } catch { /* Skip if no EXIF */ }
 
     return {
-        width: metadata.width?.toString() || '',
-        height: metadata.height?.toString() || '',
+        width: autoOrient.width?.toString() || '',
+        height: autoOrient.height?.toString() || '',
         color: mainColor,
         title,
         date
@@ -60,7 +61,7 @@ async function main() {
     }
 
     const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_CONNECTION_STRING);
-    const imagePaths = await fg([`${IMAGE_DIR}/**/*.{jpg,jpeg,png}`]);
+    const imagePaths = await fg([`${IMAGE_DIR}/**/*.{jpg,jpeg,png}`], { caseSensitiveMatch: false });
 
     for (const imagePath of imagePaths) {
         await uploadImage(blobServiceClient, imagePath);
