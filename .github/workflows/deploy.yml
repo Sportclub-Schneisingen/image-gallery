@@ -57,12 +57,13 @@ jobs:
       uses: Azure/cli@v2.1.0
       with:
         inlineScript: |
-          az storage blob upload-batch --account-name ${{ vars.STORAGE_ACCOUNT_NAME }} --auth-mode login --overwrite true -d '$web' -s public
+          az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} --auth-mode login --overwrite true -d '$web' -s public
     - name: Purge CDN
       uses: Azure/cli@v2.1.0
+      continue-on-error: true
       with:
         inlineScript: |
-          az afd endpoint purge --content-paths '/*' -g ${{ vars.RESOURCE_GROUP }} --profile-name ${{ vars.AFD_PROFILE_NAME }} --endpoint-name ${{ vars.AFD_ENDPOINT }}
+          az afd endpoint purge --content-paths '/*' -g ${{ secrets.RESOURCE_GROUP }} --profile-name ${{ secrets.AFD_PROFILE_NAME }} --endpoint-name ${{ secrets.AFD_ENDPOINT }}
     - name: Logout
       run: |
         az logout
